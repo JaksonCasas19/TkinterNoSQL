@@ -27,8 +27,8 @@ def crear():
 	client = MongoClient(MONGO_URI)
 	db = client['MusicStore']
 	collection = db['playList'] 
-
 	collection.insert_one({"_id":idValue.get(),"artista":artista.get(),"song":song.get(),"genero":comboCategoria.get()})
+	limpiarCampos()
 	messagebox.showinfo("BBDD","¡Registro insertado con éxito!")
 
 def info():
@@ -51,7 +51,6 @@ def actualizar():
 	client = MongoClient(MONGO_URI)
 	db = client['MusicStore'] 
 	collection = db['playList'] 
-
 	BuscarId = idValue.get()
 	ObtenerNombre = str(artista.get())
 	ObtenerSong = str(song.get())
@@ -60,6 +59,15 @@ def actualizar():
 	messagebox.showinfo("BBDD","¡Se actualizo con éxito!")
 
 def eliminar():
+	MONGO_URI = 'mongodb://localhost'
+	client = MongoClient(MONGO_URI)
+	db = client['MusicStore'] 
+	collection = db['playList'] 
+	BuscarId = idValue.get()
+	collection.delete_one({"_id":BuscarId})
+	limpiarCampos()
+	messagebox.showinfo("BBDD","¡Se elimino con éxito!")
+
 
 root = Tk()
 root.title("No-SQL")
@@ -79,9 +87,9 @@ borrarMenu.add_command(label="Borrar campos",command=limpiarCampos)
 
 CrudMenu = Menu(barraMenu, tearoff=0)
 CrudMenu.add_command(label="Crear",command=crear)
-CrudMenu.add_command(label="Leer")
-CrudMenu.add_command(label="Editar")
-CrudMenu.add_command(label="Eliminar")
+CrudMenu.add_command(label="Leer",command=leer)
+CrudMenu.add_command(label="Editar",command=actualizar)
+CrudMenu.add_command(label="Eliminar",command=eliminar)
 
 ayudaMenu = Menu(barraMenu, tearoff=0)
 ayudaMenu.add_command(label="Acerca de",command=info)
@@ -131,13 +139,12 @@ comboCategoria.grid(row=4,column=1,padx=10,pady=10)
 comboCategoria.current(0)
 
 #Botones CRUD
-
 secBoton =Frame(root)
 secBoton.config(bg="white",pady=25)
 secBoton.pack()
 
-botonCrear=Button(secBoton, text="Crear",bd=0,bg="#3DCC8E",fg="white",command=crear)
-botonCrear.grid(row=1,column=1,sticky="e",padx=5,pady=5)
+botonEliminar=Button(secBoton, text="Eliminar",bd=0,bg="firebrick1",fg="white",command=eliminar)
+botonEliminar.grid(row=1,column=1,sticky="e",padx=5,pady=5)
 
 botonLeer=Button(secBoton, text="Leer",bd=0,bg="SeaGreen3",fg="white",command=leer)
 botonLeer.grid(row=1,column=2,sticky="e",padx=5,pady=5)
@@ -145,8 +152,8 @@ botonLeer.grid(row=1,column=2,sticky="e",padx=5,pady=5)
 botonActualizar=Button(secBoton, text="Actualizar",bd=0,bg="goldenrod1",fg="white",command=actualizar)
 botonActualizar.grid(row=1,column=3,sticky="e",padx=5,pady=5)
 
-botonEliminar=Button(secBoton, text="Eliminar",bd=0,bg="firebrick1",fg="white")
-botonEliminar.grid(row=1,column=4,sticky="e",padx=5,pady=5)
+botonCrear=Button(secBoton, text="Crear",bd=0,bg="#3DCC8E",fg="white",command=crear)
+botonCrear.grid(row=1,column=4,sticky="e",padx=5,pady=5)
 
 
 miFrame2=Frame(root)
