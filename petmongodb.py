@@ -105,8 +105,6 @@ miHead=Frame(root)
 miHead.config(bg="#03B898")
 miHead.pack()
 
-
-
 labelTitulo=Label(miHead,text="Tkinter No-SQL",bg="#03B898",fg="white")
 labelTitulo.grid(row=0,column=0,pady=9,padx=110,columnspan=2, sticky="w"+"e")
 
@@ -134,7 +132,7 @@ cuadroArtista = Entry(miFrame,textvariable=artista)
 cuadroArtista.grid(row=2,column=1,padx=10,pady=10)
 cuadroSong = Entry(miFrame,textvariable=song)
 cuadroSong.grid(row=3,column=1,padx=10,pady=10)
-comboCategoria=ttk.Combobox(miFrame,values=["Rock","Pop","Regueton","Electro","Salsa","Latino"])
+comboCategoria=ttk.Combobox(miFrame,values=["Rock","Pop","Regueton","Electro","Salsa","Latino","Balada","Alternativa","Indie Rock"])
 comboCategoria.grid(row=4,column=1,padx=10,pady=10)
 comboCategoria.current(0)
 
