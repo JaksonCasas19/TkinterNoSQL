@@ -8,8 +8,8 @@ from PIL import Image,ImageTk
 def conectarDB():
 	MONGO_URI = 'mongodb://localhost'
 	client = MongoClient(MONGO_URI)
-	db = client['TestStore'] #Nombrar a la base de datos
-	collection = db['products'] #Crear collecciones, conjunto de datos
+	db = client['MusicStore'] #Nombrar a la base de datos
+	collection = db['playList'] #Crear collecciones, conjunto de datos
 
 def salirAplicacion():
 	valor = messagebox.askquestion("Salir","¿Deseas salir de la aplicación?")
@@ -17,16 +17,18 @@ def salirAplicacion():
 		root.destroy()
 
 def limpiarCampos():
-	nombre.set("")
-	Precio.set("")
+	idValue.set("")
+	artista.set("")
+	song.set("")
+	comboCategoria.set("")
 
 def crear():
 	MONGO_URI = 'mongodb://localhost'
 	client = MongoClient(MONGO_URI)
-	db = client['TestStore']
-	collection = db['products'] 
-	print(nombre.get())
-	collection.insert_one({"nombre":nombre.get(),"Precio":Precio.get()})
+	db = client['MusicStore']
+	collection = db['playList'] 
+
+	collection.insert_one({"_id":idValue.get(),"artista":artista.get(),"song":song.get(),"genero":comboCategoria.get()})
 	messagebox.showinfo("BBDD","¡Registro insertado con éxito!")
 
 def info():
@@ -35,15 +37,25 @@ def info():
 def leer():
 	MONGO_URI = 'mongodb://localhost'
 	client = MongoClient(MONGO_URI)
-	db = client['TestStore'] #Nombrar a la base de datos
-	collection = db['products'] #Crear collecciones, conjunto de datos
-	BuscarPrecio = str(Precio.get())
-	results = collection.find({"Precio":BuscarPrecio})#{"Precio":90}
+	db = client['MusicStore'] 
+	collection = db['playList']
+	BuscarId = idValue.get()
+	results = collection.find({"_id":BuscarId})#{"Precio":90}
 
 	for r in results:
-		nombre.set(r['nombre'])
+		artista.set(r['artista'])
+		song.set(r['song'])
+		comboCategoria.set(r['genero'])
+def actualizar():
+	MONGO_URI = 'mongodb://localhost'
+	client = MongoClient(MONGO_URI)
+	db = client['MusicStore'] 
+	collection = db['playList'] 
 
-
+	BuscarId = idValue.get()
+	ObtenerNombre = str(artista.get())
+	collection.update_many({"_id":BuscarId},{"$set":{"artista":ObtenerNombre}})
+	messagebox.showinfo("BBDD","¡Se actualizo con éxito!")
 
 
 root = Tk()
@@ -52,7 +64,7 @@ root.config(bg="white")
 
 barraMenu = Menu(root)
 root.config(menu=barraMenu, width=300,height=300)
-root.geometry('310x290')
+root.geometry('310x380')
 root.resizable(False,False) 
 
 #Empezar barra
@@ -83,6 +95,7 @@ miHead.config(bg="#03B898")
 miHead.pack()
 
 
+
 labelTitulo=Label(miHead,text="Tkinter No-SQL",bg="#03B898",fg="white")
 labelTitulo.grid(row=0,column=0,pady=9,padx=110,columnspan=2, sticky="w"+"e")
 
@@ -90,21 +103,29 @@ miFrame=Frame(root)
 miFrame.config(bg="white")
 miFrame.pack()
 
-nombre = StringVar()
-Precio = StringVar()
+idValue = StringVar()
+artista = StringVar()
+song = StringVar()
 
 
+idLabel = Label(miFrame, text="Id:",bg="white")
+idLabel.grid(row=1,column=0,sticky="e",pady=10,padx=10)
+artistaLabel = Label(miFrame, text="Artista:",bg="white")
+artistaLabel.grid(row=2,column=0,sticky="e",pady=10,padx=10)
+songLabel = Label(miFrame, text="Song:",bg="white")
+songLabel.grid(row=3,column=0,sticky="e",pady=10,padx=10)
+categoriaLabel = Label(miFrame, text="Género:",bg="white")
+categoriaLabel.grid(row=4,column=0,sticky="e",pady=10,padx=10)
 
-nombreLabel = Label(miFrame, text="Nombre:",bg="white")
-nombreLabel.grid(row=1,column=0,sticky="e",pady=10,padx=10)
-precioLabel = Label(miFrame, text="Precio:",bg="white")
-precioLabel.grid(row=2,column=0,sticky="e",pady=10,padx=10)
-
-
-cuadroNombre = Entry(miFrame,textvariable=nombre)
-cuadroNombre.grid(row=1,column=1,padx=10,pady=10)
-cuadroPrecio = Entry(miFrame,textvariable=Precio)
-cuadroPrecio.grid(row=2,column=1,padx=10,pady=10)
+cuadroId = Entry(miFrame,textvariable=idValue)
+cuadroId.grid(row=1,column=1,padx=10,pady=10)
+cuadroArtista = Entry(miFrame,textvariable=artista)
+cuadroArtista.grid(row=2,column=1,padx=10,pady=10)
+cuadroSong = Entry(miFrame,textvariable=song)
+cuadroSong.grid(row=3,column=1,padx=10,pady=10)
+comboCategoria=ttk.Combobox(miFrame,values=["Rock","Pop","Regueton","Electro","Salsa","Latino"])
+comboCategoria.grid(row=4,column=1,padx=10,pady=10)
+comboCategoria.current(0)
 
 #Botones CRUD
 
@@ -118,7 +139,7 @@ botonCrear.grid(row=1,column=1,sticky="e",padx=5,pady=5)
 botonLeer=Button(secBoton, text="Leer",bd=0,bg="SeaGreen3",fg="white",command=leer)
 botonLeer.grid(row=1,column=2,sticky="e",padx=5,pady=5)
 
-botonActualizar=Button(secBoton, text="Actualizar",bd=0,bg="goldenrod1",fg="white")
+botonActualizar=Button(secBoton, text="Actualizar",bd=0,bg="goldenrod1",fg="white",command=actualizar)
 botonActualizar.grid(row=1,column=3,sticky="e",padx=5,pady=5)
 
 botonEliminar=Button(secBoton, text="Eliminar",bd=0,bg="firebrick1",fg="white")
