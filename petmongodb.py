@@ -29,6 +29,8 @@ def crear():
 	print(nombre.get())
 	collection.insert_one({"nombre":nombre.get(),"Precio":Precio.get()})
 
+def info():
+	messagebox.showinfo("Información","Desarrollado por\nJakson Casas 2021")
 
 root = Tk()
 root.title("No-SQL")
@@ -36,7 +38,7 @@ root.config(bg="white")
 
 barraMenu = Menu(root)
 root.config(menu=barraMenu, width=300,height=300)
-root.geometry('310x250')
+root.geometry('310x290')
 root.resizable(False,False) 
 
 #Empezar barra
@@ -54,7 +56,7 @@ CrudMenu.add_command(label="Eliminar")
 
 ayudaMenu = Menu(barraMenu, tearoff=0)
 ayudaMenu.add_command(label="Licencia")
-ayudaMenu.add_command(label="Acerca de")
+ayudaMenu.add_command(label="Acerca de",command=info)
 
 barraMenu.add_cascade(label="Archivo", menu=bbddMenu)
 barraMenu.add_cascade(label="Limpiar", menu=borrarMenu)
@@ -73,7 +75,7 @@ miHead.pack()
 
 
 labelTitulo=Label(miHead,text="Tkinter No-SQL",bg="#03B898",fg="white")
-labelTitulo.grid(row=0,column=0,pady=9,padx=100,columnspan=2, sticky="w"+"e")
+labelTitulo.grid(row=0,column=0,pady=9,padx=110,columnspan=2, sticky="w"+"e")
 
 miFrame=Frame(root)
 miFrame.config(bg="white")
@@ -95,9 +97,24 @@ cuadroNombre.grid(row=1,column=1,padx=10,pady=10)
 cuadroPrecio = Entry(miFrame,textvariable=Precio)
 cuadroPrecio.grid(row=2,column=1,padx=10,pady=10)
 
+#Botones CRUD
 
-botonCrear=Button(miFrame, text="Crear",bd=0,bg="#3DCC8E",fg="white",command=crear)
-botonCrear.grid(row=3,column=1,sticky="e",padx=10,pady=10)
+secBoton =Frame(root)
+secBoton.config(bg="white",pady=25)
+secBoton.pack()
+
+botonCrear=Button(secBoton, text="Crear",bd=0,bg="#3DCC8E",fg="white",command=crear)
+botonCrear.grid(row=1,column=1,sticky="e",padx=5,pady=5)
+
+botonLeer=Button(secBoton, text="Leer",bd=0,bg="SeaGreen3",fg="white")
+botonLeer.grid(row=1,column=2,sticky="e",padx=5,pady=5)
+
+botonActualizar=Button(secBoton, text="Actualizar",bd=0,bg="goldenrod1",fg="white")
+botonActualizar.grid(row=1,column=3,sticky="e",padx=5,pady=5)
+
+botonEliminar=Button(secBoton, text="Eliminar",bd=0,bg="firebrick1",fg="white")
+botonEliminar.grid(row=1,column=4,sticky="e",padx=5,pady=5)
+
 
 miFrame2=Frame(root)
 miFrame2.config(bg="#4A4A4A")
