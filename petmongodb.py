@@ -20,7 +20,6 @@ def limpiarCampos():
 	nombre.set("")
 	Precio.set("")
 
-
 def crear():
 	MONGO_URI = 'mongodb://localhost'
 	client = MongoClient(MONGO_URI)
@@ -28,9 +27,24 @@ def crear():
 	collection = db['products'] 
 	print(nombre.get())
 	collection.insert_one({"nombre":nombre.get(),"Precio":Precio.get()})
+	messagebox.showinfo("BBDD","¡Registro insertado con éxito!")
 
 def info():
 	messagebox.showinfo("Información","Desarrollado por\nJakson Casas 2021")
+
+def leer():
+	MONGO_URI = 'mongodb://localhost'
+	client = MongoClient(MONGO_URI)
+	db = client['TestStore'] #Nombrar a la base de datos
+	collection = db['products'] #Crear collecciones, conjunto de datos
+	BuscarPrecio = str(Precio.get())
+	results = collection.find({"Precio":BuscarPrecio})#{"Precio":90}
+
+	for r in results:
+		nombre.set(r['nombre'])
+
+
+
 
 root = Tk()
 root.title("No-SQL")
@@ -49,13 +63,12 @@ borrarMenu = Menu(barraMenu, tearoff=0)
 borrarMenu.add_command(label="Borrar campos",command=limpiarCampos)
 
 CrudMenu = Menu(barraMenu, tearoff=0)
-CrudMenu.add_command(label="Crear")
+CrudMenu.add_command(label="Crear",command=crear)
 CrudMenu.add_command(label="Leer")
 CrudMenu.add_command(label="Editar")
 CrudMenu.add_command(label="Eliminar")
 
 ayudaMenu = Menu(barraMenu, tearoff=0)
-ayudaMenu.add_command(label="Licencia")
 ayudaMenu.add_command(label="Acerca de",command=info)
 
 barraMenu.add_cascade(label="Archivo", menu=bbddMenu)
@@ -63,11 +76,7 @@ barraMenu.add_cascade(label="Limpiar", menu=borrarMenu)
 barraMenu.add_cascade(label="CRUD", menu=CrudMenu)
 barraMenu.add_cascade(label="Ayuda", menu=ayudaMenu)
 
-
-
-
 #----- Empezar campos -----
-
 
 miHead=Frame(root)
 miHead.config(bg="#03B898")
@@ -106,7 +115,7 @@ secBoton.pack()
 botonCrear=Button(secBoton, text="Crear",bd=0,bg="#3DCC8E",fg="white",command=crear)
 botonCrear.grid(row=1,column=1,sticky="e",padx=5,pady=5)
 
-botonLeer=Button(secBoton, text="Leer",bd=0,bg="SeaGreen3",fg="white")
+botonLeer=Button(secBoton, text="Leer",bd=0,bg="SeaGreen3",fg="white",command=leer)
 botonLeer.grid(row=1,column=2,sticky="e",padx=5,pady=5)
 
 botonActualizar=Button(secBoton, text="Actualizar",bd=0,bg="goldenrod1",fg="white")
