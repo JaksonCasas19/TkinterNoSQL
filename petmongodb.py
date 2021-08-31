@@ -54,9 +54,12 @@ def actualizar():
 
 	BuscarId = idValue.get()
 	ObtenerNombre = str(artista.get())
-	collection.update_many({"_id":BuscarId},{"$set":{"artista":ObtenerNombre}})
+	ObtenerSong = str(song.get())
+	ObtenerCat = str(comboCategoria.get())
+	collection.update_one({"_id":BuscarId},{"$set":{"artista":ObtenerNombre,"song":ObtenerSong,"genero":ObtenerCat}})
 	messagebox.showinfo("BBDD","¡Se actualizo con éxito!")
 
+def eliminar():
 
 root = Tk()
 root.title("No-SQL")
